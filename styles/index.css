@@ -10,6 +10,7 @@ body {
 	min-height: 300px;
 	user-select: none;
 	padding: 0px;
+
   }
   
 
@@ -22,7 +23,7 @@ a {
 section.main {
 	float: left;
 	clear: both;
-	min-width:280px;
+	min-width: 280px;
 	padding: 0px 7px;
 	width: 95%;
 }

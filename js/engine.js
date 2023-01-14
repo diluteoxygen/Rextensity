@@ -317,7 +317,7 @@ var ExtensionCollectionModel = function() {
     _(results).chain()
       .sortBy(function(i) { return i.name.toUpperCase(); })
       .each(function(i){
-        if (i.name != "Extensity" && i.type != 'theme') {
+        if (i.name != "Rextensity" && i.type != 'theme') {
           self.items.push(new ExtensionModel(i));
         }
       });

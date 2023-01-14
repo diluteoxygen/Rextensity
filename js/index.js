@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   };
 
-  var ExtensityViewModel = function() {
+  var RextensityViewModel = function() {
     var self = this;
 
     self.profiles = new ProfileCollectionModel();
@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function() {
   };
 
   _.defer(function() {
-    vm = new ExtensityViewModel();
+    vm = new RextensityViewModel();
     ko.bindingProvider.instance = new ko.secureBindingsProvider({});
     ko.applyBindings(vm, document.body);
   });
