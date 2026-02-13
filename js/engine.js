@@ -241,8 +241,8 @@ var ProfileCollectionModel = function() {
         console.error('Failed to get profiles from storage:', chrome.runtime.lastError);
         return;
       }
-      // Defensive: ensure p and p.profiles are defined
-      p = (p && p.profiles) || {};
+      // Defensive: ensure p.profiles exists, otherwise use empty object
+      p = (p && p.profiles) ? p.profiles : {};
       var k = _(p).chain().keys().sortBy(sortFn).value();
       _(k).each(function(name) {
         self.items.push(new ProfileModel(name, p[name]));
