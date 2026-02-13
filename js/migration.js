@@ -22,16 +22,16 @@ function migrate_to_chrome_storage() {
       return;
     }
     
-    // Only migrate if another migration hasn't been done in a different computer.
+    // Only initialize defaults if migration hasn't been done.
     if(v.migration) {
-      console.log("Migration from localStorage already happened in another computer");
+      console.log("Storage already initialized or migration completed");
     }
     else {
-      console.log("Migrate localStorage data to Chrome Storage Sync");
+      console.log("Initializing Chrome Storage with default values");
 
-      // Note: In Manifest V3, localStorage is not available in service workers
-      // Migration from localStorage should have already happened in V2
-      // Setting default empty values for new installs
+      // Note: In Manifest V3, localStorage is not available in service workers.
+      // For new installs, we set default values.
+      // For upgrades from V2 where migration didn't happen, data is inaccessible.
       var data = {
         dismissals:   [],
         profiles:     {},
@@ -45,10 +45,10 @@ function migrate_to_chrome_storage() {
       
       chrome.storage.sync.set(data, function() {
         if(chrome.runtime.lastError) {
-          console.error('Failed to set initial migration data:', chrome.runtime.lastError);
+          console.error('Failed to set initial storage data:', chrome.runtime.lastError);
           return;
         }
-        console.log('Initial migration data set successfully');
+        console.log('Storage initialized successfully');
       });
     }
   });
@@ -57,18 +57,18 @@ function migrate_to_chrome_storage() {
 // Listeners for the event page / service worker
 chrome.runtime.onInstalled.addListener(function(details) {
   if(details.reason === 'install') {
-    // New install - set up defaults
+    // New install - initialize with default values
     migrate_to_chrome_storage();
   } else if(details.reason === 'update') {
-    // Check if migration is needed
+    // Check if storage has been initialized
     chrome.storage.sync.get("migration", function(v) {
       if(chrome.runtime.lastError) {
         console.error('Failed to check migration status during update:', chrome.runtime.lastError);
         return;
       }
       if(!v.migration) {
-        // Migration not yet done, but we're in V3 now
-        // Set defaults for new users
+        // Storage not initialized - set defaults
+        // Note: For V2->V3 upgrades, localStorage data is inaccessible in service workers
         migrate_to_chrome_storage();
       }
     });
