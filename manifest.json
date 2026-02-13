@@ -1,7 +1,7 @@
 {
   "name": "Rextensity",
   "version": "0.1.1",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "description": "Quickly enable/disable Google Chrome extensions",
   "options_page": "options.html",
   "icons" : {
@@ -9,14 +9,16 @@
     "48" : "images/icon48.png",
     "128" : "images/icon128.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "images/iconbar.png",
     "default_title": "Extensity",
     "default_popup": "index.html"
   },
   "background": {
-    "scripts": ["js/migration.js"],
-    "persistent": false
+    "service_worker": "js/migration.js"
   },
-  "permissions": ["management","storage"]
+  "permissions": ["management","storage"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }
