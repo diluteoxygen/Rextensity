@@ -64,10 +64,10 @@ function migrate_to_chrome_storage() {
 
 // Listeners for the event page / service worker
 chrome.runtime.onInstalled.addListener(function(details) {
-  if(details["reason"] == 'install') {
+  if(details["reason"] === 'install') {
     // New install - set up defaults
     migrate_to_chrome_storage();
-  } else if(details["reason"] == 'update') {
+  } else if(details["reason"] === 'update') {
     // Check if migration is needed
     chrome.storage.sync.get("migration", function(v) {
       if(chrome.runtime.lastError) {
