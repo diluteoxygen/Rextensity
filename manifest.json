@@ -11,7 +11,7 @@
   },
   "action": {
     "default_icon": "images/iconbar.png",
-    "default_title": "Extensity",
+    "default_title": "Rextensity",
     "default_popup": "index.html"
   },
   "background": {

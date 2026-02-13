@@ -70,6 +70,10 @@ chrome.runtime.onInstalled.addListener(function(details) {
   } else if(details["reason"] == 'update') {
     // Check if migration is needed
     chrome.storage.sync.get("migration", function(v) {
+      if(chrome.runtime.lastError) {
+        console.error('Failed to check migration status during update:', chrome.runtime.lastError);
+        return;
+      }
       if(!v["migration"]) {
         // Migration not yet done, but we're in V3 now
         // Set defaults for new users
