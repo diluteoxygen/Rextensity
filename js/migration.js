@@ -31,7 +31,7 @@ function migrate_to_chrome_storage() {
     }
     
     // Only migrate if another migration hasn't been done in a different computer.
-    if(v["migration"]) {
+    if(v.migration) {
       console.log("Migration from localStorage already happened in another computer");
     }
     else {
@@ -64,17 +64,17 @@ function migrate_to_chrome_storage() {
 
 // Listeners for the event page / service worker
 chrome.runtime.onInstalled.addListener(function(details) {
-  if(details["reason"] === 'install') {
+  if(details.reason === 'install') {
     // New install - set up defaults
     migrate_to_chrome_storage();
-  } else if(details["reason"] === 'update') {
+  } else if(details.reason === 'update') {
     // Check if migration is needed
     chrome.storage.sync.get("migration", function(v) {
       if(chrome.runtime.lastError) {
         console.error('Failed to check migration status during update:', chrome.runtime.lastError);
         return;
       }
-      if(!v["migration"]) {
+      if(!v.migration) {
         // Migration not yet done, but we're in V3 now
         // Set defaults for new users
         migrate_to_chrome_storage();
