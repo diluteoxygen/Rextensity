@@ -21,6 +21,10 @@ ko.extenders.toggleable = function(target, option) {
 ko.extenders.persistable = function(target, key) {
   // Persists a single observable (or observableArray) in cloud browser storage
   chrome.storage.sync.get(key, function(v) {
+    if(chrome.runtime.lastError) {
+      console.error('Failed to get storage value for key:', key, chrome.runtime.lastError);
+      return;
+    }
 
     // Set initial value from storage if present.
     if(v[key]) {
@@ -31,7 +35,11 @@ ko.extenders.persistable = function(target, key) {
     target.subscribe(function(val) {
       var obj={};
       obj[key]=val;
-      chrome.storage.sync.set(obj);
+      chrome.storage.sync.set(obj, function() {
+        if(chrome.runtime.lastError) {
+          console.error('Failed to set storage value for key:', key, chrome.runtime.lastError);
+        }
+      });
     });
   });
 };
@@ -75,10 +83,18 @@ var DismissalsCollection = function() {
 
   // Initializer
   chrome.storage.sync.get("dismissals", function(arr) {
+    if(chrome.runtime.lastError) {
+      console.error('Failed to get dismissals from storage:', chrome.runtime.lastError);
+      return;
+    }
     self.dismissals(arr);
     // Subscribe to observables after setting the initial value so we don't re-save the same thing.
     self.dismissals.subscribe(function(a) {
-      chrome.storage.sync.set({dismissals: a});
+      chrome.storage.sync.set({dismissals: a}, function() {
+        if(chrome.runtime.lastError) {
+          console.error('Failed to save dismissals to storage:', chrome.runtime.lastError);
+        }
+      });
     });
   });
 };
@@ -112,6 +128,10 @@ var OptionsCollection = function() {
 
   // Set observable values from Chrome Storage
   chrome.storage.sync.get(_(defs).keys(), function(v) {
+    if(chrome.runtime.lastError) {
+      console.error('Failed to get options from storage:', chrome.runtime.lastError);
+      return;
+    }
     _(v).each(function(val, key) {
       self[key](val);
     });
@@ -203,6 +223,11 @@ var ProfileCollectionModel = function() {
   };
 
   chrome.storage.sync.get("localProfiles", function(v) {
+    if(chrome.runtime.lastError) {
+      console.error('Failed to get localProfiles setting from storage:', chrome.runtime.lastError);
+      return;
+    }
+    
     // Pull profiles from sync or local storage as appropriate.
     var storage = (v.localProfiles) ? chrome.storage.local : chrome.storage.sync;
 
@@ -212,7 +237,12 @@ var ProfileCollectionModel = function() {
     };
 
     storage.get("profiles", function(p) {
-      p = p['profiles'] || {};
+      if(chrome.runtime.lastError) {
+        console.error('Failed to get profiles from storage:', chrome.runtime.lastError);
+        return;
+      }
+      // Defensive: ensure p.profiles exists, otherwise use empty object
+      p = (p && p.profiles) ? p.profiles : {};
       var k = _(p).chain().keys().sortBy(sortFn).value();
       _(k).each(function(name) {
         self.items.push(new ProfileModel(name, p[name]));
@@ -314,6 +344,10 @@ var ExtensionCollectionModel = function() {
 
   // Initialize
   chrome.management.getAll(function(results) {
+    if(chrome.runtime.lastError) {
+      console.error('Failed to get extension list from chrome.management:', chrome.runtime.lastError);
+      return;
+    }
     _(results).chain()
       .sortBy(function(i) { return i.name.toUpperCase(); })
       .each(function(i){

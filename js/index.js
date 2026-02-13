@@ -36,7 +36,11 @@ document.addEventListener("DOMContentLoaded", function() {
         // Re-enable
         _(self.toggled()).each(function(id) {
           // Old disabled extensions may be removed
-          try{ self.exts.find(id).enable();} catch(e) {};
+          try{ 
+            self.exts.find(id).enable();
+          } catch(e) {
+            console.error('Failed to enable extension:', id, e);
+          }
         });
         self.toggled([]);
       } else {

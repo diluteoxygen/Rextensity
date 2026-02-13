@@ -79,7 +79,9 @@ document.addEventListener("DOMContentLoaded", function() {
       (new DismissalsCollection()).dismiss("profile_page_viewed");
       self.selectByIndex(0);
     }
-    catch(e) { /*No profiles*/ }
+    catch(e) {
+      console.log('No profiles available to select:', e);
+    }
 
   };
 
