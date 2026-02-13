@@ -15,14 +15,6 @@ function boolean(value) {
     return Boolean(value);
 }
 
-// Boolean value from storage with a default
-function b(idx, def) {
-  // Note: In Manifest V3 service workers, localStorage is not available
-  // This function is kept for backwards compatibility but won't be called
-  // as migration should have already happened in V2
-  return def;
-}
-
 function migrate_to_chrome_storage() {
   chrome.storage.sync.get("migration", function(v) {
     if(chrome.runtime.lastError) {
