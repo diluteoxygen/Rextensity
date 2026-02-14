@@ -1,16 +1,16 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  var SearchViewModel = function() {
-    var self = this;
+  const SearchViewModel = function() {
+    const self = this;
     self.q = ko.observable("");
 
     // TODO: Add more search control here.
   };
 
-  var SwitchViewModel = function(exts, profiles, opts) {
-    var self = this;
+  const SwitchViewModel = function(exts, profiles, opts) {
+    const self = this;
 
-    var init = [];
+    const init = [];
 
     self.exts = exts;
     self.profiles = profiles;
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
       return (self.any()) ? 'fa-toggle-off' : 'fa-toggle-on'
     });
 
-    var disableFilterFn = function(item) {
+    const disableFilterFn = function(item) {
       // Filter out Always On extensions when disabling, if option is set.
       if(!self.opts.keepAlwaysOn()) return true;
       return !_(self.profiles.always_on().items()).contains(item.id());
@@ -47,13 +47,13 @@ document.addEventListener("DOMContentLoaded", function() {
         // Disable
         self.toggled(self.exts.enabled.pluck());
         self.exts.enabled.disable(disableFilterFn);
-      };
+      }
     };
 
   };
 
-  var RextensityViewModel = function() {
-    var self = this;
+  const RextensityViewModel = function() {
+    const self = this;
 
     self.profiles = new ProfileCollectionModel();
     self.exts = new ExtensionCollectionModel();
@@ -63,23 +63,23 @@ document.addEventListener("DOMContentLoaded", function() {
     self.search = new SearchViewModel();
     self.activeProfile = ko.observable().extend({persistable: "activeProfile"});
 
-    var filterFn = function(i) {
+    const filterFn = function(i) {
       // Filtering function for search box
       if(!self.opts.searchBox()) return true;
       if(!self.search.q()) return true;
       return i.name().toUpperCase().indexOf(self.search.q().toUpperCase()) !== -1;
     };
 
-    var filterProfileFn = function(i) {
+    const filterProfileFn = function(i) {
       // Only show public profiles in the list
       return self.opts.showReserved() || !i.reserved();
     }
 
-    var nameSortFn = function(i) {
+    const nameSortFn = function(i) {
       return i.name().toUpperCase();
     };
 
-    var statusSortFn = function(i) {
+    const statusSortFn = function(i) {
       return !i.status();
     };
 
@@ -123,9 +123,9 @@ document.addEventListener("DOMContentLoaded", function() {
     self.setProfile = function(p) {
       self.activeProfile(p.name());
       // Profile items, plus always-on items
-      var ids = _.union(p.items(), self.profiles.always_on().items());
-      var to_enable = _.intersection(self.exts.disabled.pluck(),ids);
-      var to_disable = _.difference(self.exts.enabled.pluck(), ids);
+      const ids = _.union(p.items(), self.profiles.always_on().items());
+      const to_enable = _.intersection(self.exts.disabled.pluck(),ids);
+      const to_disable = _.difference(self.exts.enabled.pluck(), ids);
       _(to_enable).each(function(id) { self.exts.find(id).enable() });
       _(to_disable).each(function(id) { self.exts.find(id).disable() });
     };
@@ -140,26 +140,70 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Private helper functions
-    var openTab = function (url) {
+    const openTab = function (url) {
       chrome.tabs.create({url: url});
       close();
     };
 
-    var close = function() {
+    const close = function() {
       window.close();
     };
 
     // View helpers
-    var visitedProfiles = ko.computed(function() {
+    const visitedProfiles = ko.computed(function() {
       return (self.dismissals.dismissed("profile_page_viewed") || self.profiles.any());
     });
 
   };
 
   _.defer(function() {
-    vm = new RextensityViewModel();
+    const vm = new RextensityViewModel();
     ko.bindingProvider.instance = new ko.secureBindingsProvider({});
     ko.applyBindings(vm, document.body);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      // Focus search box with '/'
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        const searchInput = document.querySelector('input[type="text"]');
+        if (searchInput) searchInput.focus();
+        return;
+      }
+
+      // Clear search with Escape
+      if (e.key === 'Escape') {
+        vm.search.q('');
+        const searchInput = document.querySelector('input[type="text"]');
+        if (searchInput) searchInput.blur();
+        return;
+      }
+
+      // Toggle all extensions with Ctrl/Cmd + A
+      if ((e.ctrlKey || e.metaKey) && e.key === 'a' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        vm.switch.flip();
+        return;
+      }
+    });
+
+    // Toggle keyboard help
+    const helpToggle = document.getElementById('help-toggle');
+    const keyboardHelp = document.getElementById('keyboard-help');
+    if (helpToggle && keyboardHelp) {
+      helpToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        keyboardHelp.classList.toggle('hidden');
+      });
+      
+      // Update Ctrl key labels for Mac
+      if (navigator.platform.indexOf('Mac') > -1) {
+        const ctrlKeys = document.querySelectorAll('#ctrl-key, #ctrl-key-2, #ctrl-key-3');
+        ctrlKeys.forEach(function(el) {
+          el.textContent = 'Cmd';
+        });
+      }
+    }
   });
 
   // Workaround for Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=307912

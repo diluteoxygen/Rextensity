@@ -1,5 +1,8 @@
 // Migration from localStorage settings to Chrome Storage sync.
 
+// Import constants
+importScripts('constants.js');
+
 // Helper: remove sync'd storage for testing
 // chrome.storage.sync.remove(['migration','profiles', 'showHeader', 'groupApps', 'appsFirst', 'enabledFirst', 'searchBox', 'dismissals', 'toggled']);
 
@@ -32,7 +35,7 @@ function migrate_to_chrome_storage() {
       // Note: In Manifest V3, localStorage is not available in service workers.
       // For new installs, we set default values.
       // For upgrades from V2 where migration didn't happen, data is inaccessible.
-      var data = {
+      const data = {
         dismissals:   [],
         profiles:     {},
         showHeader:   true,
@@ -74,3 +77,84 @@ chrome.runtime.onInstalled.addListener(function(details) {
     });
   }
 });
+
+// Handle keyboard commands
+chrome.commands.onCommand.addListener(function(command) {
+  if (command === 'toggle-all') {
+    // Get current state from storage
+    chrome.storage.sync.get(['toggled', 'keepAlwaysOn'], function(result) {
+      if(chrome.runtime.lastError) {
+        console.error('Failed to get toggle state:', chrome.runtime.lastError);
+        return;
+      }
+      
+      const toggled = result.toggled || [];
+      const keepAlwaysOn = result.keepAlwaysOn || false;
+      
+      // Get all extensions
+      chrome.management.getAll(function(extensions) {
+        if(chrome.runtime.lastError) {
+          console.error('Failed to get extensions:', chrome.runtime.lastError);
+          return;
+        }
+        
+        // Get Always On profile if keepAlwaysOn is enabled
+        let alwaysOnIds = [];
+        if (keepAlwaysOn) {
+          chrome.storage.sync.get('profiles', function(p) {
+            if (!chrome.runtime.lastError && p.profiles && p.profiles[RESERVED_PROFILES.ALWAYS_ON]) {
+              alwaysOnIds = p.profiles[RESERVED_PROFILES.ALWAYS_ON];
+            }
+            performToggle(extensions, toggled, alwaysOnIds);
+          });
+        } else {
+          performToggle(extensions, toggled, alwaysOnIds);
+        }
+      });
+    });
+  }
+});
+
+function performToggle(extensions, toggled, alwaysOnIds) {
+  // Create a map of existing extension IDs for quick lookup
+  const existingIds = {};
+  extensions.forEach(function(ext) {
+    existingIds[ext.id] = ext;
+  });
+
+  if (toggled.length > 0) {
+    // Re-enable previously disabled extensions
+    toggled.forEach(function(id) {
+      // Check if extension still exists
+      if (existingIds[id]) {
+        try {
+          chrome.management.setEnabled(id, true);
+        } catch(e) {
+          console.error('Failed to enable extension:', id, e);
+        }
+      } else {
+        console.log('Extension no longer exists, skipping:', id);
+      }
+    });
+    // Clear toggled list
+    chrome.storage.sync.set({toggled: []});
+  } else {
+    // Disable all enabled extensions (except Always On if applicable)
+    const enabledIds = [];
+    extensions.forEach(function(ext) {
+      if (ext.enabled && ext.mayDisable && ext.name !== 'Rextensity' && ext.type !== 'theme') {
+        // Skip if in Always On profile
+        if (alwaysOnIds.indexOf(ext.id) === -1) {
+          enabledIds.push(ext.id);
+          try {
+            chrome.management.setEnabled(ext.id, false);
+          } catch(e) {
+            console.error('Failed to disable extension:', ext.id, e);
+          }
+        }
+      }
+    });
+    // Save disabled list
+    chrome.storage.sync.set({toggled: enabledIds});
+  }
+}
