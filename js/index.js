@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
       // Focus search box with '/'
-      if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
         e.preventDefault();
         const searchInput = document.querySelector('input[type="text"]');
         if (searchInput) searchInput.focus();
@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function() {
       }
 
       // Toggle all extensions with Ctrl/Cmd + A
-      if ((e.ctrlKey || e.metaKey) && e.key === 'a' && document.activeElement.tagName !== 'INPUT') {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'a' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
         e.preventDefault();
         vm.switch.flip();
         return;
@@ -195,6 +195,14 @@ document.addEventListener("DOMContentLoaded", function() {
         e.preventDefault();
         keyboardHelp.classList.toggle('hidden');
       });
+      
+      // Update Ctrl key labels for Mac
+      if (navigator.platform.indexOf('Mac') > -1) {
+        const ctrlKeys = document.querySelectorAll('#ctrl-key, #ctrl-key-2, #ctrl-key-3');
+        ctrlKeys.forEach(function(el) {
+          el.textContent = 'Cmd';
+        });
+      }
     }
   });
 

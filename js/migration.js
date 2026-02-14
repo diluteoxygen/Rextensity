@@ -113,13 +113,24 @@ chrome.commands.onCommand.addListener(function(command) {
 });
 
 function performToggle(extensions, toggled, alwaysOnIds) {
+  // Create a map of existing extension IDs for quick lookup
+  const existingIds = {};
+  extensions.forEach(function(ext) {
+    existingIds[ext.id] = ext;
+  });
+
   if (toggled.length > 0) {
     // Re-enable previously disabled extensions
     toggled.forEach(function(id) {
-      try {
-        chrome.management.setEnabled(id, true);
-      } catch(e) {
-        console.error('Failed to enable extension:', id, e);
+      // Check if extension still exists
+      if (existingIds[id]) {
+        try {
+          chrome.management.setEnabled(id, true);
+        } catch(e) {
+          console.error('Failed to enable extension:', id, e);
+        }
+      } else {
+        console.log('Extension no longer exists, skipping:', id);
       }
     });
     // Clear toggled list

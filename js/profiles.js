@@ -182,8 +182,8 @@ document.addEventListener("DOMContentLoaded", function() {
       const successEl = document.getElementById('import-result');
       const errorEl = document.getElementById('import-error');
       errorEl.className = 'hidden';
+      successEl.innerHTML = '<i class="fa fa-check"></i> ' + (message || 'Import successful!');
       successEl.className = 'visible';
-      successEl.textContent = message || 'Import successful!';
       setTimeout(function() {
         successEl.className = 'hidden';
       }, 5000);

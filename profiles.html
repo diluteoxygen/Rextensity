@@ -75,8 +75,8 @@
         <button id="import" data-sbind="click: triggerImport"><i class="fa fa-upload"></i> Import Profiles</button>
         <input type="file" id="import-file" accept=".json" style="display: none;" data-sbind="event: {change: importProfiles}" />
       </p>
-      <p id="import-result" class="hidden" style="color: green;"><i class="fa fa-check"></i> Import successful!</p>
-      <p id="import-error" class="hidden" style="color: red;"><i class="fa fa-exclamation-triangle"></i> <span id="import-error-message"></span></p>
+      <p id="import-result" class="hidden import-success"></p>
+      <p id="import-error" class="hidden import-error"><i class="fa fa-exclamation-triangle"></i> <span id="import-error-message"></span></p>
 
     </div>
 
