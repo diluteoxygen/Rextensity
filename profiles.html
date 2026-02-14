@@ -69,6 +69,14 @@
       <p class="quota-error" data-sbind="visible: profiles.localProfiles">
         <i class="fa fa-warning"></i> You have too many Extensions or Profiles to sync with Google. <b>Your Profiles are still saved, but only for this browser</b>.
       </p>
+      <hr />
+      <p>
+        <button id="export" data-sbind="click: exportProfiles"><i class="fa fa-download"></i> Export Profiles</button>&nbsp;
+        <button id="import" data-sbind="click: triggerImport"><i class="fa fa-upload"></i> Import Profiles</button>
+        <input type="file" id="import-file" accept=".json" style="display: none;" data-sbind="event: {change: importProfiles}" />
+      </p>
+      <p id="import-result" class="hidden" style="color: green;"><i class="fa fa-check"></i> Import successful!</p>
+      <p id="import-error" class="hidden" style="color: red;"><i class="fa fa-exclamation-triangle"></i> <span id="import-error-message"></span></p>
 
     </div>
 
