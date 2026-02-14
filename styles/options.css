@@ -266,7 +266,7 @@ fieldset#options .field {
 	cursor: pointer;
 }
 
-/* General visibility-based utility classes for fadeout animations */
+/* General visibility-based utility classes for fadeout animations and state management */
 .fadeout {
   visibility: hidden;
   opacity: 0;
