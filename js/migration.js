@@ -32,7 +32,7 @@ function migrate_to_chrome_storage() {
       // Note: In Manifest V3, localStorage is not available in service workers.
       // For new installs, we set default values.
       // For upgrades from V2 where migration didn't happen, data is inaccessible.
-      var data = {
+      const data = {
         dismissals:   [],
         profiles:     {},
         showHeader:   true,

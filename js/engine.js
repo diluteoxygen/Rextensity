@@ -62,14 +62,14 @@ ko.extenders.countable = function(target, option) {
   });
 };
 
-var fadeOutMessage = function(id) {
-  el = document.getElementById(id);
+const fadeOutMessage = function(id) {
+  const el = document.getElementById(id);
   el.className = "visible";
   _.delay(function() { el.className = "fadeout"}, 2000);
 };
 
-var DismissalsCollection = function() {
-  var self = this;
+const DismissalsCollection = function() {
+  const self = this;
 
   self.dismissals = ko.observableArray();
 
@@ -99,11 +99,11 @@ var DismissalsCollection = function() {
   });
 };
 
-var OptionsCollection = function() {
-  var self = this;
+const OptionsCollection = function() {
+  const self = this;
 
   // Options and defauts
-  var defs = {
+  const defs = {
     showHeader   : true,
     groupApps    : true,
     appsFirst    : false,
@@ -139,10 +139,10 @@ var OptionsCollection = function() {
 
 };
 
-var ProfileModel = function(name, items) {
-  var self = this;
+const ProfileModel = function(name, items) {
+  const self = this;
 
-  var reserved_names = {
+  const reserved_names = {
     "__always_on": "Always On"
   };
 
@@ -164,8 +164,8 @@ var ProfileModel = function(name, items) {
   return this;
 };
 
-var ProfileCollectionModel = function() {
-  var self = this;
+const ProfileCollectionModel = function() {
+  const self = this;
 
   self.items = ko.observableArray();
   self.localProfiles = ko.observable(undefined).extend({persistable: "localProfiles"});
@@ -200,7 +200,7 @@ var ProfileCollectionModel = function() {
   }
 
   self.save = function(callback) {
-    var r = {};
+    const r = {};
 
     _(self.items()).each(function(i) {
       if (i.name()) {
@@ -229,9 +229,9 @@ var ProfileCollectionModel = function() {
     }
     
     // Pull profiles from sync or local storage as appropriate.
-    var storage = (v.localProfiles) ? chrome.storage.local : chrome.storage.sync;
+    const storage = (v.localProfiles) ? chrome.storage.local : chrome.storage.sync;
 
-    var sortFn = function(el) {
+    const sortFn = function(el) {
       // Add heading space to reserved profiles to sort at top.
       return (el.startsWith("__") ? " " : "") + el.toUpperCase();
     };
@@ -243,7 +243,7 @@ var ProfileCollectionModel = function() {
       }
       // Defensive: ensure p.profiles exists, otherwise use empty object
       p = (p && p.profiles) ? p.profiles : {};
-      var k = _(p).chain().keys().sortBy(sortFn).value();
+      const k = _(p).chain().keys().sortBy(sortFn).value();
       _(k).each(function(name) {
         self.items.push(new ProfileModel(name, p[name]));
       });
@@ -254,15 +254,15 @@ var ProfileCollectionModel = function() {
   return this;
 }
 
-var ExtensionModel = function(e) {
-  var self = this;
+const ExtensionModel = function(e) {
+  const self = this;
 
-  var item = e;
+  const item = e;
 
   // Get the smallest available icon.
-  var smallestIcon = function(icons) {
-    var smallest = _(icons).chain().pluck('size').min().value();
-    var icon = _(icons).find({size: smallest});
+  const smallestIcon = function(icons) {
+    const smallest = _(icons).chain().pluck('size').min().value();
+    const icon = _(icons).find({size: smallest});
     return (icon && icon.url) || '';
   };
 
@@ -306,14 +306,15 @@ var ExtensionModel = function(e) {
 
 };
 
-var ExtensionCollectionModel = function() {
-  var self = this;
+const ExtensionCollectionModel = function() {
+  const self = this;
 
   self.items = ko.observableArray();
 
-  var typeFilter = function(types) {
-    var all = self.items(); res = [];
-    for (var i = 0; i < all.length; i++) {
+  const typeFilter = function(types) {
+    const all = self.items(); 
+    const res = [];
+    for (let i = 0; i < all.length; i++) {
       if(_(types).includes(all[i].type)) { res.push(all[i]); }
     }
     return res;

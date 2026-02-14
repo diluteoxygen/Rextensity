@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  var ProfilesViewModel = function() {
-    var self = this;
+  const ProfilesViewModel = function() {
+    const self = this;
 
     self.ext = new ExtensionCollectionModel();
     self.profiles = new ProfileCollectionModel();
@@ -34,10 +34,10 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     self.add = function() {
-      var n = self.add_name();
-      var enabled = self.ext.enabled.pluck();
+      const n = self.add_name();
+      const enabled = self.ext.enabled.pluck();
       if(n) {
-        var p = self.profiles.find(n);
+        const p = self.profiles.find(n);
         if(!p) {
           // Warning! slice or the array reference will mix up between all instances.
           self.profiles.add(n,enabled.slice());
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     self.remove = function(profile) {
-      var c = (profile == self.current_profile());
+      const c = (profile == self.current_profile());
       if(confirm("Are you sure you want to remove this profile?")) {
         self.profiles.remove(profile);
         if(c) self.selectByIndex(0); // Select first one if removing the current.
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
     self.close = function() { window.close(); }
 
     self.toggleAll = function() {
-      var exts = _(self.ext.extensions()).map(function(i) { return i.id(); });
+      const exts = _(self.ext.extensions()).map(function(i) { return i.id(); });
       self.current_profile().items(exts);
     };
 
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   };
 
-  vm = new ProfilesViewModel();
+  const vm = new ProfilesViewModel();
 
   ko.bindingProvider.instance = new ko.secureBindingsProvider({});
   ko.applyBindings(vm, document.getElementById('profiles'));
