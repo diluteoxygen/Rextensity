@@ -23,6 +23,13 @@ Follow us Extensity Twitter: [@ExtensityChrome](https://twitter.com/ExtensityChr
 
 ### What's new:
 
+v0.2.0 (Feb 2026)
+- **Performance**: Updated Knockout.js to 3.5.1 (from 3.4.0)
+- **Performance**: Updated Underscore.js to 1.13.6 (from 1.8.3)
+- **Code Quality**: Modernized codebase to ES6+ (const/let instead of var)
+- **Developer Experience**: Added source maps for better debugging
+- **Maintenance**: Improved code maintainability and readability
+
 v0.1.1 (Jan 2023)
 - **Base**: Everything in v1.11.0 (Sep 2020)
 - **New Feature**: Added Dark Theme
