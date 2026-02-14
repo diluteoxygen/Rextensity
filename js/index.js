@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Disable
         self.toggled(self.exts.enabled.pluck());
         self.exts.enabled.disable(disableFilterFn);
-      };
+      }
     };
 
   };

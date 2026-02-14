@@ -1,0 +1,13 @@
+{
+  "name": "rextensity",
+  "version": "0.2.0",
+  "description": "Chrome extension for managing extensions",
+  "private": true,
+  "scripts": {
+    "lint": "eslint js/*.js",
+    "lint:fix": "eslint js/*.js --fix"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1"
+  }
+}
