@@ -312,12 +312,10 @@ const ExtensionCollectionModel = function() {
   self.items = ko.observableArray();
 
   const typeFilter = function(types) {
-    const all = self.items(); 
-    const res = [];
-    for (let i = 0; i < all.length; i++) {
-      if(_(types).includes(all[i].type)) { res.push(all[i]); }
-    }
-    return res;
+    const all = self.items();
+    return all.filter(function(item) {
+      return _(types).includes(item.type);
+    });
   };
 
   self.extensions = ko.computed(function() {
