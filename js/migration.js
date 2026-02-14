@@ -1,5 +1,8 @@
 // Migration from localStorage settings to Chrome Storage sync.
 
+// Import constants
+importScripts('constants.js');
+
 // Helper: remove sync'd storage for testing
 // chrome.storage.sync.remove(['migration','profiles', 'showHeader', 'groupApps', 'appsFirst', 'enabledFirst', 'searchBox', 'dismissals', 'toggled']);
 
@@ -99,8 +102,8 @@ chrome.commands.onCommand.addListener(function(command) {
         let alwaysOnIds = [];
         if (keepAlwaysOn) {
           chrome.storage.sync.get('profiles', function(p) {
-            if (!chrome.runtime.lastError && p.profiles && p.profiles.__always_on) {
-              alwaysOnIds = p.profiles.__always_on;
+            if (!chrome.runtime.lastError && p.profiles && p.profiles[RESERVED_PROFILES.ALWAYS_ON]) {
+              alwaysOnIds = p.profiles[RESERVED_PROFILES.ALWAYS_ON];
             }
             performToggle(extensions, toggled, alwaysOnIds);
           });

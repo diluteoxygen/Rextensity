@@ -142,10 +142,6 @@ const OptionsCollection = function() {
 const ProfileModel = function(name, items) {
   const self = this;
 
-  const reserved_names = {
-    "__always_on": "Always On"
-  };
-
   self.name = ko.observable(name);
   self.items = ko.observableArray(items);
 
@@ -158,7 +154,7 @@ const ProfileModel = function(name, items) {
   });
 
   self.short_name = ko.computed(function() {
-    return reserved_names[self.name()] || _.str.prune(self.name(),30);
+    return RESERVED_PROFILES.DISPLAY_NAMES[self.name()] || _.str.prune(self.name(),30);
   });
 
   return this;
@@ -188,7 +184,7 @@ const ProfileCollectionModel = function() {
   };
 
   self.always_on = function() {
-    return self.find_or_create("__always_on");
+    return self.find_or_create(RESERVED_PROFILES.ALWAYS_ON);
   };
 
   self.remove = function(profile) {
