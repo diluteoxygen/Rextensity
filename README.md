@@ -24,6 +24,7 @@ Follow us Extensity Twitter: [@ExtensityChrome](https://twitter.com/ExtensityChr
 ### What's new:
 
 v0.2.0 (Feb 2026)
+- **New Feature**: Import/Export Profiles - Backup and restore your profile configurations
 - **Performance**: Updated Knockout.js to 3.5.1 (from 3.4.0)
 - **Performance**: Updated Underscore.js to 1.13.6 (from 1.8.3)
 - **Code Quality**: Modernized codebase to ES6+ (const/let instead of var)

@@ -11,12 +11,13 @@ This document outlines suggested improvements for the Rextensity Chrome extensio
 - ✅ **ES6+ Modernization**: Converted all `var` to `const`/`let`, improved code quality
 - ✅ **Code Splitting**: Verified library loading is optimized per page
 - ✅ **Developer Experience**: Added source maps for better debugging
+- ✅ **Import/Export Profiles**: Full backup/restore capability with JSON format
 - 📝 **Documentation**: Updated README and roadmap with v0.2.0 changes
 
 ### Priority Status
 - 🔴 **Critical Priority**: 0/3 completed (Manifest V3, CSP, Error Handling)
 - 🟠 **High Priority**: 3/3 completed (Dependencies ✅, ES6+ ✅, Code Splitting ✅)
-- 🟡 **Medium Priority**: 0/4 tasks started
+- 🟡 **Medium Priority**: 1/3 completed (Import/Export ✅, Keyboard Shortcuts, Favorites)
 - 🟢 **Low Priority**: 0/8 tasks started
 
 ---
@@ -164,25 +165,31 @@ This document outlines suggested improvements for the Rextensity Chrome extensio
 
 ## 🟡 Medium Priority (Features & UX)
 
-### 7. Add Import/Export for Profiles
+### 7. Add Import/Export for Profiles ✅ COMPLETED
 **Impact:** HIGH | **Effort:** MEDIUM | **Category:** Feature
+**Status:** ✅ Completed February 2026
 
 **Context:** Users mentioned in TODO.md - no backup/share capability for profiles.
 
-**Changes Required:**
-- Add "Export Profiles" button in profiles.html
+**Changes Completed:**
+- ✅ Added "Export Profiles" button in profiles.html
   - Generates JSON file with all profiles
-  - Downloads to user's computer
-- Add "Import Profiles" button
+  - Downloads to user's computer with timestamp in filename
+  - Format: `{"version": "1.0", "timestamp": "...", "profiles": {...}}`
+- ✅ Added "Import Profiles" button
   - File picker for JSON upload
-  - Validates and merges with existing profiles
-  - Handles duplicate names gracefully
-- Format: `{"version": "1.0", "profiles": {...}}`
+  - Validates file structure and version
+  - Merges with existing profiles (skips duplicates)
+  - Handles errors gracefully with user feedback
+  - Auto-saves after successful import
+- ✅ Added visual feedback for import success/error states
+- ✅ Styled buttons and feedback messages
 
 **Benefits:**
-- Backup/restore capability
-- Share profiles between devices/users
-- Disaster recovery
+- ✅ Backup/restore capability for profiles
+- ✅ Share profiles between devices/users
+- ✅ Disaster recovery protection
+- ✅ Easy profile migration
 
 ---
 
