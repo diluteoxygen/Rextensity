@@ -31,6 +31,13 @@ document.addEventListener("DOMContentLoaded", function() {
       return !_(self.profiles.always_on().items()).contains(item.id());
     };
 
+    // NOTE: This flip() method operates on the popup UI's observable extension models,
+    // while performToggle() in migration.js uses chrome.management API directly from the
+    // background service worker. They must remain separate because:
+    // 1. popup UI has live ExtensionModel observables with enable/disable methods
+    // 2. background service worker has no access to these UI observables
+    // 3. background handles async chrome.management.setEnabled promises
+    // Both respect Always On profile when keepAlwaysOn option is enabled.
     self.flip = function() {
       if(self.any()) {
         // Re-enable
@@ -179,8 +186,8 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
       }
 
-      // Toggle all extensions with Ctrl/Cmd + A
-      if ((e.ctrlKey || e.metaKey) && e.key === 'a' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+      // Toggle all extensions with Ctrl/Cmd + Shift + A
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
         e.preventDefault();
         vm.switch.flip();
         return;

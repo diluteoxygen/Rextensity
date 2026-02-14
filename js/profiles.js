@@ -24,31 +24,55 @@ document.addEventListener("DOMContentLoaded", function() {
       self.selectReserved(data, "always_on");
     }
 
+    // Validates profile name for user-created profiles
+    // Returns {valid: boolean, error: string}
+    self.validateProfileName = function(name) {
+      const trimmed = name.trim();
+      
+      if (!trimmed) {
+        return {valid: false, error: 'Profile name is required.'};
+      }
+      if (trimmed.length > 30) {
+        return {valid: false, error: 'Profile name is too long (maximum 30 characters).'};
+      }
+      if (trimmed.startsWith('__')) {
+        return {valid: false, error: 'Profile names cannot start with "__" (reserved prefix).'};
+      }
+      
+      return {valid: true};
+    };
+
     self.selectReserved = function(data, n) {
       self.add_name("__"+n);
-      self.add();
+      self.add(true); // Pass internal flag
     };
 
     self.selectByIndex = function(idx) {
       self.current_profile(self.profiles.items()[idx]);
     };
 
-    self.add = function() {
+    self.add = function(internal) {
       const n = self.add_name().trim();
       const enabled = self.ext.enabled.pluck();
       
-      // Validation
-      if (!n) {
-        alert('Profile name is required.');
-        return;
-      }
-      if (n.length > 30) {
-        alert('Profile name is too long (maximum 30 characters).');
-        return;
-      }
-      if (n.startsWith('__')) {
-        alert('Profile names cannot start with "__" (reserved prefix).');
-        return;
+      // Validation - for internal calls, skip reserved prefix check
+      if (internal) {
+        // For internal calls, validate without reserved prefix check
+        if (!n) {
+          alert('Profile name is required.');
+          return;
+        }
+        if (n.length > 30) {
+          alert('Profile name is too long (maximum 30 characters).');
+          return;
+        }
+      } else {
+        // For user calls, use full validation including reserved prefix check
+        const validation = self.validateProfileName(n);
+        if (!validation.valid) {
+          alert(validation.error);
+          return;
+        }
       }
       
       const p = self.profiles.find(n);
@@ -98,8 +122,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
       // Collect all profiles (excluding reserved ones for clarity)
       _(self.profiles.items()).each(function(profile) {
-        if (profile.name()) {
-          exportData.profiles[profile.name()] = profile.items();
+        const profileName = profile.name();
+        if (profileName && !profileName.startsWith('__')) {
+          exportData.profiles[profileName] = profile.items();
         }
       });
 
@@ -149,6 +174,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
           // Import profiles
           _(importData.profiles).each(function(items, name) {
+            // Validate profile name
+            const validation = self.validateProfileName(name);
+            if (!validation.valid) {
+              skippedCount++;
+              console.warn('Invalid profile name, skipping:', name, validation.error);
+              return;
+            }
+            
             // Skip if profile already exists
             if (self.profiles.exists(name)) {
               skippedCount++;
