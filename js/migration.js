@@ -156,6 +156,8 @@ function performToggle(extensions, toggled, alwaysOnIds) {
           console.error('Failed to update toggled list:', chrome.runtime.lastError);
         }
       });
+    }).catch(function(err) {
+      console.error('Unexpected error processing toggle results:', err);
     });
   } else {
     // Disable all enabled extensions (except Always On if applicable)

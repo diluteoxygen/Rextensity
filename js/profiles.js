@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return {valid: false, error: 'Profile names cannot start with "__" (reserved prefix).'};
       }
       
-      return {valid: true, error: null};
+      return {valid: true};
     };
 
     self.selectReserved = function(data, n) {
@@ -55,21 +55,22 @@ document.addEventListener("DOMContentLoaded", function() {
       const n = self.add_name().trim();
       const enabled = self.ext.enabled.pluck();
       
-      // Validation - skip reserved prefix check for internal calls
-      if (!internal) {
-        const validation = self.validateProfileName(n);
-        if (!validation.valid) {
-          alert(validation.error);
-          return;
-        }
-      } else {
-        // For internal calls, only check empty and length
+      // Validation - for internal calls, skip reserved prefix check
+      if (internal) {
+        // For internal calls, validate without reserved prefix check
         if (!n) {
           alert('Profile name is required.');
           return;
         }
         if (n.length > 30) {
           alert('Profile name is too long (maximum 30 characters).');
+          return;
+        }
+      } else {
+        // For user calls, use full validation including reserved prefix check
+        const validation = self.validateProfileName(n);
+        if (!validation.valid) {
+          alert(validation.error);
           return;
         }
       }
