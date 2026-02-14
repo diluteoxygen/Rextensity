@@ -34,20 +34,33 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     self.add = function() {
-      const n = self.add_name();
+      const n = self.add_name().trim();
       const enabled = self.ext.enabled.pluck();
-      if(n) {
-        const p = self.profiles.find(n);
-        if(!p) {
-          // Warning! slice or the array reference will mix up between all instances.
-          self.profiles.add(n,enabled.slice());
-          self.selectByIndex(self.profiles.items().length-1);
-        }
-        else {
-          self.current_profile(p);
-        }
-        self.add_name("");
+      
+      // Validation
+      if (!n) {
+        alert('Profile name is required.');
+        return;
       }
+      if (n.length > 30) {
+        alert('Profile name is too long (maximum 30 characters).');
+        return;
+      }
+      if (n.startsWith('__')) {
+        alert('Profile names cannot start with "__" (reserved prefix).');
+        return;
+      }
+      
+      const p = self.profiles.find(n);
+      if(!p) {
+        // Warning! slice or the array reference will mix up between all instances.
+        self.profiles.add(n,enabled.slice());
+        self.selectByIndex(self.profiles.items().length-1);
+      }
+      else {
+        self.current_profile(p);
+      }
+      self.add_name("");
     };
 
     self.remove = function(profile) {
