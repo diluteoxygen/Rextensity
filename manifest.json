@@ -17,6 +17,22 @@
   "background": {
     "service_worker": "js/migration.js"
   },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E"
+      },
+      "description": "Open Rextensity popup"
+    },
+    "toggle-all": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+T",
+        "mac": "Command+Shift+T"
+      },
+      "description": "Toggle all extensions on/off"
+    }
+  },
   "permissions": ["management","storage"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"

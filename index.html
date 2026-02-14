@@ -25,8 +25,20 @@
 
 		<a href="chrome://extensions" class="page" id="chrome-extensions" target="_blank" data-sbind="click: openChromeExtensions"><i class="fa fa-puzzle-piece" alt="Chrome Extensions" title="Chrome Extensions"></i></a>
 
-		<a href="#" class="switch" data-sbind="click: switch.flip"><i class="fa" data-sbind="css: switch.toggleStyle" alt="Switch enabled extensions off. Click again to switch back on." title="Switch enabled extensions off. Click again to switch back on."></i></a>
+		<a href="#" class="switch" data-sbind="click: switch.flip" title="Toggle all extensions (Ctrl+Shift+T)"><i class="fa" data-sbind="css: switch.toggleStyle" alt="Switch enabled extensions off. Click again to switch back on." title="Switch enabled extensions off. Click again to switch back on."></i></a>
+
+		<a href="#" class="help-toggle" id="help-toggle" title="Keyboard shortcuts"><i class="fa fa-keyboard-o"></i></a>
 	</h1>
+	<div id="keyboard-help" class="keyboard-help hidden">
+		<p><strong>Keyboard Shortcuts:</strong></p>
+		<ul>
+			<li><kbd>/</kbd> - Focus search box</li>
+			<li><kbd>Esc</kbd> - Clear search</li>
+			<li><kbd>Ctrl+A</kbd> - Toggle all extensions</li>
+			<li><kbd>Ctrl+Shift+E</kbd> - Open/close popup</li>
+			<li><kbd>Ctrl+Shift+T</kbd> - Toggle all (global)</li>
+		</ul>
+	</div>
 </section>
 
 <section id="search" class="main" data-sbind="if: opts.searchBox">

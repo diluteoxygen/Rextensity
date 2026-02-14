@@ -74,3 +74,73 @@ chrome.runtime.onInstalled.addListener(function(details) {
     });
   }
 });
+
+// Handle keyboard commands
+chrome.commands.onCommand.addListener(function(command) {
+  if (command === 'toggle-all') {
+    // Get current state from storage
+    chrome.storage.sync.get(['toggled', 'keepAlwaysOn'], function(result) {
+      if(chrome.runtime.lastError) {
+        console.error('Failed to get toggle state:', chrome.runtime.lastError);
+        return;
+      }
+      
+      const toggled = result.toggled || [];
+      const keepAlwaysOn = result.keepAlwaysOn || false;
+      
+      // Get all extensions
+      chrome.management.getAll(function(extensions) {
+        if(chrome.runtime.lastError) {
+          console.error('Failed to get extensions:', chrome.runtime.lastError);
+          return;
+        }
+        
+        // Get Always On profile if keepAlwaysOn is enabled
+        let alwaysOnIds = [];
+        if (keepAlwaysOn) {
+          chrome.storage.sync.get('profiles', function(p) {
+            if (!chrome.runtime.lastError && p.profiles && p.profiles.__always_on) {
+              alwaysOnIds = p.profiles.__always_on;
+            }
+            performToggle(extensions, toggled, alwaysOnIds);
+          });
+        } else {
+          performToggle(extensions, toggled, alwaysOnIds);
+        }
+      });
+    });
+  }
+});
+
+function performToggle(extensions, toggled, alwaysOnIds) {
+  if (toggled.length > 0) {
+    // Re-enable previously disabled extensions
+    toggled.forEach(function(id) {
+      try {
+        chrome.management.setEnabled(id, true);
+      } catch(e) {
+        console.error('Failed to enable extension:', id, e);
+      }
+    });
+    // Clear toggled list
+    chrome.storage.sync.set({toggled: []});
+  } else {
+    // Disable all enabled extensions (except Always On if applicable)
+    const enabledIds = [];
+    extensions.forEach(function(ext) {
+      if (ext.enabled && ext.mayDisable && ext.name !== 'Rextensity' && ext.type !== 'theme') {
+        // Skip if in Always On profile
+        if (alwaysOnIds.indexOf(ext.id) === -1) {
+          enabledIds.push(ext.id);
+          try {
+            chrome.management.setEnabled(ext.id, false);
+          } catch(e) {
+            console.error('Failed to disable extension:', ext.id, e);
+          }
+        }
+      }
+    });
+    // Save disabled list
+    chrome.storage.sync.set({toggled: enabledIds});
+  }
+}

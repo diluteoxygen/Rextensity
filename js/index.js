@@ -160,6 +160,42 @@ document.addEventListener("DOMContentLoaded", function() {
     const vm = new RextensityViewModel();
     ko.bindingProvider.instance = new ko.secureBindingsProvider({});
     ko.applyBindings(vm, document.body);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      // Focus search box with '/'
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        const searchInput = document.querySelector('input[type="text"]');
+        if (searchInput) searchInput.focus();
+        return;
+      }
+
+      // Clear search with Escape
+      if (e.key === 'Escape') {
+        vm.search.q('');
+        const searchInput = document.querySelector('input[type="text"]');
+        if (searchInput) searchInput.blur();
+        return;
+      }
+
+      // Toggle all extensions with Ctrl/Cmd + A
+      if ((e.ctrlKey || e.metaKey) && e.key === 'a' && document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        vm.switch.flip();
+        return;
+      }
+    });
+
+    // Toggle keyboard help
+    const helpToggle = document.getElementById('help-toggle');
+    const keyboardHelp = document.getElementById('keyboard-help');
+    if (helpToggle && keyboardHelp) {
+      helpToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        keyboardHelp.classList.toggle('hidden');
+      });
+    }
   });
 
   // Workaround for Chrome bug https://bugs.chromium.org/p/chromium/issues/detail?id=307912
