@@ -124,20 +124,43 @@ function performToggle(extensions, toggled, alwaysOnIds) {
 
   if (toggled.length > 0) {
     // Re-enable previously disabled extensions
+    const succeededIds = [];
+    const failedIds = [];
+    
     toggled.forEach(function(id) {
       // Check if extension still exists
       if (existingIds[id]) {
-        try {
-          chrome.management.setEnabled(id, true);
-        } catch(e) {
-          console.error('Failed to enable extension:', id, e);
-        }
+        chrome.management.setEnabled(id, true).catch(function(err) {
+          console.error('Failed to enable extension:', id, err);
+          failedIds.push(id);
+        }).then(function() {
+          // Track successful enable if no error
+          if (failedIds.indexOf(id) === -1) {
+            succeededIds.push(id);
+          }
+          
+          // After all attempts complete, update storage with only failed IDs
+          if (succeededIds.length + failedIds.length === toggled.length) {
+            chrome.storage.sync.set({toggled: failedIds}, function() {
+              if (chrome.runtime.lastError) {
+                console.error('Failed to update toggled list:', chrome.runtime.lastError);
+              }
+            });
+          }
+        });
       } else {
         console.log('Extension no longer exists, skipping:', id);
       }
     });
-    // Clear toggled list
-    chrome.storage.sync.set({toggled: []});
+    
+    // If all extensions no longer exist, clear the toggled list
+    if (toggled.every(function(id) { return !existingIds[id]; })) {
+      chrome.storage.sync.set({toggled: []}, function() {
+        if (chrome.runtime.lastError) {
+          console.error('Failed to clear toggled list:', chrome.runtime.lastError);
+        }
+      });
+    }
   } else {
     // Disable all enabled extensions (except Always On if applicable)
     const enabledIds = [];
@@ -146,15 +169,17 @@ function performToggle(extensions, toggled, alwaysOnIds) {
         // Skip if in Always On profile
         if (alwaysOnIds.indexOf(ext.id) === -1) {
           enabledIds.push(ext.id);
-          try {
-            chrome.management.setEnabled(ext.id, false);
-          } catch(e) {
-            console.error('Failed to disable extension:', ext.id, e);
-          }
+          chrome.management.setEnabled(ext.id, false).catch(function(err) {
+            console.error('Failed to disable extension:', ext.id, err);
+          });
         }
       }
     });
     // Save disabled list
-    chrome.storage.sync.set({toggled: enabledIds});
+    chrome.storage.sync.set({toggled: enabledIds}, function() {
+      if (chrome.runtime.lastError) {
+        console.error('Failed to save toggled list:', chrome.runtime.lastError);
+      }
+    });
   }
 }
