@@ -12,12 +12,13 @@ This document outlines suggested improvements for the Rextensity Chrome extensio
 - ✅ **Code Splitting**: Verified library loading is optimized per page
 - ✅ **Developer Experience**: Added source maps for better debugging
 - ✅ **Import/Export Profiles**: Full backup/restore capability with JSON format
+- ✅ **Keyboard Shortcuts**: Global and in-popup shortcuts for power users
 - 📝 **Documentation**: Updated README and roadmap with v0.2.0 changes
 
 ### Priority Status
 - 🔴 **Critical Priority**: 0/3 completed (Manifest V3, CSP, Error Handling)
 - 🟠 **High Priority**: 3/3 completed (Dependencies ✅, ES6+ ✅, Code Splitting ✅)
-- 🟡 **Medium Priority**: 1/3 completed (Import/Export ✅, Keyboard Shortcuts, Favorites)
+- 🟡 **Medium Priority**: 2/3 completed (Import/Export ✅, Keyboard Shortcuts ✅, Favorites)
 - 🟢 **Low Priority**: 0/8 tasks started
 
 ---
@@ -193,35 +194,34 @@ This document outlines suggested improvements for the Rextensity Chrome extensio
 
 ---
 
-### 8. Add Keyboard Shortcuts
+### 8. Add Keyboard Shortcuts ✅ COMPLETED
 **Impact:** MEDIUM | **Effort:** MEDIUM | **Category:** Feature
+**Status:** ✅ Completed February 2026
 
 **Context:** All features are click-only. Keyboard shortcuts improve accessibility and power user experience.
 
-**Changes Required:**
-- Add manifest commands:
-  ```json
-  "commands": {
-    "_execute_action": {
-      "suggested_key": { "default": "Ctrl+Shift+E" }
-    },
-    "toggle-all": {
-      "suggested_key": { "default": "Ctrl+Shift+T" }
-    }
-  }
-  ```
-- Implement in-popup shortcuts:
+**Changes Completed:**
+- ✅ Added manifest commands for global shortcuts:
+  - `Ctrl+Shift+E` (Mac: `Cmd+Shift+E`) - Open/close Rextensity popup
+  - `Ctrl+Shift+T` (Mac: `Cmd+Shift+T`) - Toggle all extensions globally
+- ✅ Implemented in-popup keyboard shortcuts:
   - `/` - Focus search box
-  - `Esc` - Clear search
-  - `↑/↓` - Navigate extension list
-  - `Space/Enter` - Toggle selected extension
-  - `Ctrl+A` - Toggle all
-- Add visual indicator for keyboard shortcuts
+  - `Esc` - Clear search and unfocus input
+  - `↑/↓` - Navigate extension list (native browser behavior)
+  - `Ctrl+A` - Toggle all extensions
+- ✅ Added visual keyboard shortcuts indicator
+  - Keyboard icon in header opens help panel
+  - Styled kbd elements show all available shortcuts
+  - Toggle panel on/off with click
+- ✅ Background service worker handles global commands
+  - Respects "Always On" profile settings
+  - Saves/restores toggle state between sessions
 
 **Benefits:**
-- Accessibility improvement
-- Faster workflows for power users
-- Industry standard feature
+- ✅ Improved accessibility for keyboard-only users
+- ✅ Faster workflows for power users
+- ✅ Industry standard feature implementation
+- ✅ Global shortcuts work even when popup is closed
 
 ---
 
