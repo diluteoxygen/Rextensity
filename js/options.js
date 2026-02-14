@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
-  var OptionsViewModel = function() {
-    var self = this;
+  const OptionsViewModel = function() {
+    const self = this;
     self.options = new OptionsCollection();
 
     self.save = function() {
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     self.close = function() { window.close(); }
   };
 
-  vm = new OptionsViewModel();
+  const vm = new OptionsViewModel();
 
   ko.bindingProvider.instance = new ko.secureBindingsProvider({});
   ko.applyBindings(vm, document.getElementById('options'));

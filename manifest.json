@@ -1,6 +1,6 @@
 {
   "name": "Rextensity",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "manifest_version": 3,
   "description": "Quickly enable/disable Google Chrome extensions",
   "options_page": "options.html",
@@ -16,6 +16,22 @@
   },
   "background": {
     "service_worker": "js/migration.js"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E"
+      },
+      "description": "Open Rextensity popup"
+    },
+    "toggle-all": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+T",
+        "mac": "Command+Shift+T"
+      },
+      "description": "Toggle all extensions on/off"
+    }
   },
   "permissions": ["management","storage"],
   "content_security_policy": {

@@ -6,10 +6,11 @@
 <link rel="stylesheet" type="text/css" href="styles/normalize.css" />
 <link rel="stylesheet" type="text/css" href="styles/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="styles/index.css" />
-<script type="text/javascript" src="js/libs/underscore-min.js"></script>
+<script type="text/javascript" src="js/libs/underscore-1.13.6-min.js"></script>
 <script type="text/javascript" src="js/libs/underscore.string.min.js"></script>
-<script type="text/javascript" src="js/libs/knockout-3.4.0.js"></script>
+<script type="text/javascript" src="js/libs/knockout-3.5.1.js"></script>
 <script type="text/javascript" src="js/libs/knockout-secure-binding.min.js"></script>
+<script type="text/javascript" src="js/constants.js"></script>
 <script type="text/javascript" src="js/engine.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 </head>
@@ -25,8 +26,20 @@
 
 		<a href="chrome://extensions" class="page" id="chrome-extensions" target="_blank" data-sbind="click: openChromeExtensions"><i class="fa fa-puzzle-piece" alt="Chrome Extensions" title="Chrome Extensions"></i></a>
 
-		<a href="#" class="switch" data-sbind="click: switch.flip"><i class="fa" data-sbind="css: switch.toggleStyle" alt="Switch enabled extensions off. Click again to switch back on." title="Switch enabled extensions off. Click again to switch back on."></i></a>
+		<a href="#" class="switch" data-sbind="click: switch.flip" title="Toggle all extensions (Ctrl+Shift+T)"><i class="fa" data-sbind="css: switch.toggleStyle" alt="Switch enabled extensions off. Click again to switch back on." title="Switch enabled extensions off. Click again to switch back on."></i></a>
+
+		<a href="#" class="help-toggle" id="help-toggle" title="Keyboard shortcuts"><i class="fa fa-keyboard-o"></i></a>
 	</h1>
+	<div id="keyboard-help" class="keyboard-help hidden">
+		<p><strong>Keyboard Shortcuts:</strong></p>
+		<ul>
+			<li><kbd>/</kbd> - Focus search box</li>
+			<li><kbd>Esc</kbd> - Clear search</li>
+			<li><kbd id="ctrl-key">Ctrl</kbd>+<kbd>A</kbd> - Toggle all extensions</li>
+			<li><kbd id="ctrl-key-2">Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> - Open/close popup</li>
+			<li><kbd id="ctrl-key-3">Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> - Toggle all (global)</li>
+		</ul>
+	</div>
 </section>
 
 <section id="search" class="main" data-sbind="if: opts.searchBox">

@@ -1,0 +1,53 @@
+{
+  "extends": "eslint:recommended",
+  "env": {
+    "browser": true,
+    "es6": true,
+    "webextensions": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "script"
+  },
+  "globals": {
+    "ko": "readonly",
+    "_": "readonly",
+    "chrome": "readonly"
+  },
+  "rules": {
+    "no-unused-vars": ["warn", { 
+      "args": "none",
+      "varsIgnorePattern": "^(fadeOutMessage|DismissalsCollection|OptionsCollection|ProfileModel|ProfileCollectionModel|ExtensionModel|ExtensionCollectionModel|boolean|RESERVED_PROFILES|init|visitedProfiles)$"
+    }],
+    "no-console": "off",
+    "no-extra-semi": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["js/migration.js"],
+      "globals": {
+        "importScripts": "readonly",
+        "RESERVED_PROFILES": "readonly"
+      }
+    },
+    {
+      "files": ["js/engine.js"],
+      "globals": {
+        "RESERVED_PROFILES": "readonly"
+      }
+    },
+    {
+      "files": ["js/index.js", "js/options.js", "js/profiles.js"],
+      "globals": {
+        "fadeOutMessage": "readonly",
+        "DismissalsCollection": "readonly",
+        "OptionsCollection": "readonly",
+        "ProfileModel": "readonly",
+        "ProfileCollectionModel": "readonly",
+        "ExtensionModel": "readonly",
+        "ExtensionCollectionModel": "readonly",
+        "RESERVED_PROFILES": "readonly"
+      }
+    }
+  ]
+}

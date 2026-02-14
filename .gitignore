@@ -1,3 +1,5 @@
 dist/
 .project
+*.bak
+node_modules/
 .env
